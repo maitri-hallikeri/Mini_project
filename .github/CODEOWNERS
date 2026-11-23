@@ -1,0 +1,37 @@
+# CODEOWNERS — fill in real GitHub usernames before enabling branch protection.
+#
+# Format: <pattern> <owner> [<owner>...]
+# Patterns are matched top-to-bottom; the last matching rule wins.
+
+# Default: Member 3 owns everything unless overridden below.
+# * @member3-username
+
+# Member 1 — traffic analysis and benchmark loader
+# backend/app/modules/traffic_analysis/ @member1-username
+# backend/benchmarks/cic_ddos2019_loader.py @member1-username
+
+# Member 2 — detection, mitigation, recovery, benchmark training
+# backend/app/modules/detection/ @member2-username
+# backend/app/modules/mitigation/ @member2-username
+# backend/app/modules/recovery/ @member2-username
+# backend/benchmarks/train_evaluate.py @member2-username
+
+# Member 3 — backend core
+# backend/app/core/ @member3-username
+# backend/app/schemas/ @member3-username
+# backend/app/models/ @member3-username
+# backend/app/repositories/ @member3-username
+# backend/app/api/ @member3-username
+# backend/app/orchestrator/ @member3-username
+# backend/Dockerfile @member3-username
+# backend/docker-compose.yml @member3-username
+
+# Shared schemas require approval from both sides:
+# backend/app/schemas/traffic.py @member1-username @member3-username
+# backend/app/schemas/detection.py @member2-username @member3-username
+# backend/app/schemas/mitigation.py @member2-username @member3-username
+# backend/app/schemas/recovery.py @member2-username @member3-username
+# backend/app/schemas/incident.py @member2-username @member3-username @member4-username
+
+# Member 4 depends on API docs — changes need their review too:
+# backend/docs/API_CONTRACT.md @member3-username @member4-username
