@@ -1,13 +1,7 @@
-"""
-Fixed time-window aggregator — stub implementation.
-
-Owner: Member 1.
-# TODO(member1): implement FixedWindowAggregator
-"""
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 from app.modules.traffic_analysis.interfaces import WindowAggregator
 from app.schemas.traffic import RequestLogRecord
@@ -15,39 +9,64 @@ from app.schemas.traffic import RequestLogRecord
 
 class FixedWindowAggregator(WindowAggregator):
     """
-    Accumulates records into non-overlapping fixed-width windows.
-
-    Args:
-        window_seconds: Width of each window in seconds
-                        (from ``Settings.WINDOW_SECONDS``).
-
-    TODO(member1):
-      - Keep an internal buffer keyed by window start time.
-      - In ``add()``, assign each record to its window bucket based on its
-        ``timestamp``.
-      - In ``pop_ready_windows(now)``, return and clear all buckets whose
-        end time (start + window_seconds) is <= ``now``.
+    Groups incoming request records into fixed-width time windows.
     """
 
     def __init__(self, window_seconds: int = 10) -> None:
+        if window_seconds <= 0:
+            raise ValueError("window_seconds must be positive")
+
         self._window_seconds = window_seconds
+        self._windows: dict[datetime, list[RequestLogRecord]] = {}
 
     def add(self, records: list[RequestLogRecord]) -> None:
-        """
-        Raises:
-            NotImplementedError: TODO(member1): buffer records into window buckets.
-        """
-        raise NotImplementedError(
-            "TODO(member1): buffer records into fixed-width window buckets"
-        )
+        for record in records:
+            timestamp = record.timestamp
+
+            if timestamp.tzinfo is None:
+                raise ValueError("Record timestamp must be timezone-aware")
+
+            timestamp = timestamp.astimezone(timezone.utc)
+
+            timestamp_seconds = timestamp.timestamp()
+
+            window_start_seconds = (
+                int(timestamp_seconds // self._window_seconds)
+                * self._window_seconds
+            )
+
+            window_start = datetime.fromtimestamp(
+                window_start_seconds,
+                tz=timezone.utc
+            )
+
+            if window_start not in self._windows:
+                self._windows[window_start] = []
+
+            self._windows[window_start].append(record)
 
     def pop_ready_windows(
-        self, now: datetime
+        self,
+        now: datetime
     ) -> list[tuple[datetime, datetime, list[RequestLogRecord]]]:
-        """
-        Raises:
-            NotImplementedError: TODO(member1): return completed windows.
-        """
-        raise NotImplementedError(
-            "TODO(member1): pop and return all window buckets whose end <= now"
-        )
+
+        if now.tzinfo is None:
+            raise ValueError("now must be timezone-aware")
+
+        now = now.astimezone(timezone.utc)
+
+        ready_windows = []
+
+        for window_start in sorted(self._windows):
+            window_end = window_start + timedelta(
+                seconds=self._window_seconds
+            )
+
+            if window_end <= now:
+                records = self._windows.pop(window_start)
+
+                ready_windows.append(
+                    (window_start, window_end, records)
+                )
+
+        return ready_windows
