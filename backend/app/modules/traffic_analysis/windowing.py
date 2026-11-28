@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from app.modules.traffic_analysis.interfaces import WindowAggregator
 from app.schemas.traffic import RequestLogRecord
@@ -26,7 +26,7 @@ class FixedWindowAggregator(WindowAggregator):
             if timestamp.tzinfo is None:
                 raise ValueError("Record timestamp must be timezone-aware")
 
-            timestamp = timestamp.astimezone(timezone.utc)
+            timestamp = timestamp.astimezone(UTC)
 
             timestamp_seconds = timestamp.timestamp()
 
@@ -37,7 +37,7 @@ class FixedWindowAggregator(WindowAggregator):
 
             window_start = datetime.fromtimestamp(
                 window_start_seconds,
-                tz=timezone.utc
+                tz=UTC
             )
 
             if window_start not in self._windows:
@@ -53,7 +53,7 @@ class FixedWindowAggregator(WindowAggregator):
         if now.tzinfo is None:
             raise ValueError("now must be timezone-aware")
 
-        now = now.astimezone(timezone.utc)
+        now = now.astimezone(UTC)
 
         ready_windows = []
 

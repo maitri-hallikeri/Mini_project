@@ -227,7 +227,7 @@ def test_window_aggregator_removes_popped_windows():
 def test_window_aggregator_rejects_invalid_window_size():
     try:
         FixedWindowAggregator(window_seconds=0)
-        assert False, "Expected ValueError"
+        raise AssertionError("Expected ValueError")
     except ValueError:
         pass
 
@@ -311,7 +311,7 @@ def test_feature_extractor_rejects_zero_duration():
 
     try:
         extractor.extract([], now, now)
-        assert False, "Expected ValueError"
+        raise AssertionError("Expected ValueError")
     except ValueError:
         pass
 
@@ -373,6 +373,6 @@ def test_baseline_rejects_naive_datetime():
 
     try:
         store.get(datetime(2026, 11, 23, 10, 0))
-        assert False, "Expected ValueError"
+        raise AssertionError("Expected ValueError")
     except ValueError:
         pass

@@ -6,8 +6,6 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
-import pytest
-
 from app.modules.mitigation.audit import DbAuditLogger
 from app.modules.mitigation.controller import DefaultMitigationController
 from app.modules.mitigation.nginx_writer import NginxRuleWriter

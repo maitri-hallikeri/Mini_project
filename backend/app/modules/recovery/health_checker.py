@@ -84,4 +84,3 @@ class HttpHealthChecker(HealthChecker):
                 client.close()
 
         return results
-    

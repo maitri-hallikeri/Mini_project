@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from math import sqrt
 
 from app.modules.traffic_analysis.interfaces import BaselineStore
@@ -56,7 +56,7 @@ class InMemoryBaselineStore(BaselineStore):
         """
 
         hour = features.window_start.astimezone(
-            timezone.utc
+            UTC
         ).hour
 
         for feature in self.FEATURE_NAMES:
@@ -75,7 +75,7 @@ class InMemoryBaselineStore(BaselineStore):
 
         self._sample_count += 1
         self._last_updated = features.window_end.astimezone(
-            timezone.utc
+            UTC
         )
 
     def get(self, at: datetime) -> BaselineProfile | None:

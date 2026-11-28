@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 from collections import Counter
-from datetime import datetime, timezone
-from statistics import mean, quantiles, pstdev
+from datetime import UTC, datetime
+from statistics import mean, pstdev, quantiles
 
 from app.modules.traffic_analysis.interfaces import FeatureExtractor
 from app.schemas.traffic import RequestLogRecord, WindowFeatures
@@ -111,8 +111,8 @@ class WindowFeatureExtractor(FeatureExtractor):
             burstiness = 0.0
 
         return WindowFeatures(
-            window_start=window_start.astimezone(timezone.utc),
-            window_end=window_end.astimezone(timezone.utc),
+            window_start=window_start.astimezone(UTC),
+            window_end=window_end.astimezone(UTC),
             duration_s=duration,
             total_requests=total_requests,
             requests_per_sec=total_requests / duration,

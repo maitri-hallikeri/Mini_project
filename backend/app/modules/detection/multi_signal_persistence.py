@@ -10,8 +10,7 @@ import csv
 from dataclasses import dataclass
 from pathlib import Path
 
-from app.schemas.traffic import WindowFeatures, RequestLogRecord
-
+from app.schemas.traffic import RequestLogRecord, WindowFeatures
 
 FEATURE_NAMES = (
     "requests_per_second",

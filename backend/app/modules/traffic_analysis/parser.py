@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from pydantic import ValidationError
 
@@ -40,7 +40,7 @@ class NginxLogParser(LogParser):
             timestamp = datetime.strptime(
                 data["time_local"],
                 "%d/%b/%Y:%H:%M:%S %z"
-            ).astimezone(timezone.utc)
+            ).astimezone(UTC)
 
             request_parts = data["request"].split()
 

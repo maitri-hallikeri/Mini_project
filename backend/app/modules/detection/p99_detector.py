@@ -12,11 +12,11 @@ The thresholds were calibrated using 10-second traffic windows.
 from __future__ import annotations
 
 import csv
-
 from collections import Counter
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, Sequence
+from typing import Literal
 
 from app.schemas.detection import (
     RiskAssessment,
@@ -25,7 +25,6 @@ from app.schemas.detection import (
     SignalEvidence,
 )
 from app.schemas.traffic import RequestLogRecord, WindowFeatures
-
 
 Classification = Literal["BENIGN", "SUSPICIOUS", "ATTACK"]
 
